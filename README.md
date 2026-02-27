@@ -1,3 +1,8 @@
+# NOTES for BEDE:
+- AMBER (including AmberTools) is only provided on ppc64le partitions/nodes (i.e. Power9) but NOT aarch64 (i.e. GraceHoppers).
+
+
+
 # deepdrivewe
 Implementation of [WESTPA](https://westpa.github.io/westpa/index.html) using [Colmena](https://github.com/exalearn/colmena/tree/master).
 
