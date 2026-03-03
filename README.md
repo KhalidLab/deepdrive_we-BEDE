@@ -10,14 +10,14 @@ Implementation of [WESTPA](https://westpa.github.io/westpa/index.html) using [Co
 
 To install the package, run the following command:
 ```bash
-git clone git@github.com:braceal/deepdrivewe.git
+git clone https://github.com/NikJur/deepdrive_we-BEDE.git
 cd deepdrivewe
 pip install -e .
 ```
 
 Full installation including dependencies:
 ```bash
-git clone git@github.com:braceal/deepdrivewe.git
+git clone https://github.com/NikJur/deepdrive_we-BEDE.git
 cd deepdrivewe
 conda create -n deepdrivewe python=3.10 -y
 conda install omnia::ambertools -y
