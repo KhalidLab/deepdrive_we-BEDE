@@ -52,10 +52,10 @@ pip install -e .
 #  │ exit code: 1
 #  ╰─> [305 lines of output]
 #      /tmp/pip-build-env-njmmdowk/overlay/lib/python3.12/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
-#```
+```
 #To use deep learning models, install the correct version of [PyTorch](https://pytorch.org/get-started/locally/)
 #for your system and drivers. To use `mdlearn`, you may need an earlier version of PyTorch:
-#```bash
+```bash
 pip install torch==1.12
 ```
 
@@ -63,7 +63,10 @@ pip install torch==1.12
 
 To install the package on VISTA, run the following commands:
 ```bash
-ml gcc/14.2.0 cuda/12.5 hdf5
+#old: ml gcc/14.2.0 cuda/12.5 hdf5
+module load gcc/14.2
+module load cuda/12.5.1
+module load hdf5
 
 conda create -n deepdrivewe python=3.12 -y
 conda activate deepdrivewe
