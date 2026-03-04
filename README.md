@@ -45,11 +45,17 @@ conda install dacase::ambertools-dac=25 #needs python 3.12#
 conda install conda-forge::openmm -y
 
 pip install -e .
-```
 
-To use deep learning models, install the correct version of [PyTorch](https://pytorch.org/get-started/locally/)
-for your system and drivers. To use `mdlearn`, you may need an earlier version of PyTorch:
-```bash
+#  Building wheel for h5py (pyproject.toml) ... error
+#  error: subprocess-exited-with-error
+#  × Building wheel for h5py (pyproject.toml) did not run successfully.
+#  │ exit code: 1
+#  ╰─> [305 lines of output]
+#      /tmp/pip-build-env-njmmdowk/overlay/lib/python3.12/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
+#```
+#To use deep learning models, install the correct version of [PyTorch](https://pytorch.org/get-started/locally/)
+#for your system and drivers. To use `mdlearn`, you may need an earlier version of PyTorch:
+#```bash
 pip install torch==1.12
 ```
 
