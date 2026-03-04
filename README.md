@@ -23,6 +23,24 @@ cd deepdrivewe
 conda create -n deepdrivewe python=3.12 -y
 #old: conda install omnia::ambertools -y#
 conda install dacase::ambertools-dac=25 #needs python 3.12#
+
+#To enable CUDA support, UCX requires the CUDA Runtime library (libcudart).
+#The library can be installed with the appropriate command below:
+#* For CUDA 12, run:    conda install cuda-cudart cuda-version=12
+#* For CUDA 13, run:    conda install cuda-cudart cuda-version=13
+#If any of the packages you requested use CUDA then CUDA should already
+#have been installed for you.
+#To enable CUDA support, please follow UCX's instruction above.
+#To additionally enable NCCL support, run:    conda install nccl
+#On Linux, Open MPI is built with CUDA awareness but it is disabled by default.
+#To enable it, please set the environment variable
+#OMPI_MCA_opal_cuda_support=true
+#before launching your MPI processes.
+#Equivalently, you can set the MCA parameter in the command line:
+#mpiexec --mca opal_cuda_support 1 ...
+#Note that you might also need to set UCX_MEMTYPE_CACHE=n for CUDA awareness via
+#UCX. Please consult UCX documentation for further details.
+
 conda install conda-forge::openmm==7.7 -y
 pip install -e .
 ```
