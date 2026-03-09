@@ -99,13 +99,13 @@ mkdir -p /nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache
 export PIP_CACHE_DIR="/nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache"
 export TMPDIR="/nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache"
 
-pip install -e .
 #if error "Failed building wheel for h5py":
 conda install conda-forge::h5py -y
-#obsulete? conda install conda-forge::pyyaml -y
-pip install colmena proxystore parsl typer mdtraj mdanalysis scikit-learn mdlearn natsort matplotlib pydantic
 
 pip install -e . --no-deps
+
+#obsulete? conda install conda-forge::pyyaml -y
+pip install colmena proxystore parsl typer mdtraj mdanalysis scikit-learn mdlearn natsort matplotlib pydantic
 ```
 To run an example on VISTA, update the absolute paths in the submit script
 and the YAML config file, and then run the following command:
