@@ -60,6 +60,21 @@ pip install torch==1.12
 ```
 
 ### Installation on VISTA
+Install conda (adjust this for paths etc still, this is currently default doc. from Bede:
+```bash
+export CONDADIR=/nobackup/projects/<project>/$USER/aarch64 # Update this with your <project> code.
+mkdir -p $CONDADIR
+pushd $CONDADIR
+
+# Download the latest miniconda installer for aarch64
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
+# Validate the file checksum matches is listed on https://docs.conda.io/en/latest/miniconda_hashes.html.
+sha256sum Miniconda3-latest-Linux-aarch64.sh
+
+sh Miniconda3-latest-Linux-aarch64.sh -b -p ./miniconda
+source miniconda/etc/profile.d/conda.sh
+conda update conda -y
+```
 
 To install the package on VISTA, run the following commands:
 ```bash
