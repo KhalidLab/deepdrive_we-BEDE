@@ -104,7 +104,7 @@ class DDWEThinker(BaseThinker):
 
     @result_processor(topic='simulation')
     def process_simulation_result(self, result: Result) -> None:
-        """Process a simulation result."""
+        """Process a simulation result but also ensure data persists for training."""
         # Log simulation job results
         self.result_logger.log(result, topic='simulation')
 
@@ -127,7 +127,7 @@ class DDWEThinker(BaseThinker):
         # extract the proxied objects. The non-streaming case will
         # need to extract and re-proxy the objects twice (once for
         # the train task and once for the inference task).
-        output = result.value if self.streaming else extract(result.value)
+        output = result.value if self.streaming else extract(result.value, evict=False)
         self.sim_output.append(output)
 
         # If we have all the simulation results, submit a train task
