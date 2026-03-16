@@ -145,7 +145,7 @@ class ConvolutionalVAE:
         import torch
 
         # Load the checkpoint
-        cp = torch.load(checkpoint_path, map_location=self.trainer.device)
+        cp = torch.load(checkpoint_path, map_location=self.trainer.device, weights_only=True)
 
         # Load the model state dict
         self.trainer.model.load_state_dict(cp['model_state_dict'])

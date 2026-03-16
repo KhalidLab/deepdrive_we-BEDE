@@ -18,11 +18,18 @@ else:  # pragma: <3.11 cover
 
 from parsl.config import Config
 from parsl.executors import HighThroughputExecutor
-from parsl.launchers import WrappedLauncher
+from parsl.launchers import WrappedLauncher, SimpleLauncher
 from parsl.providers import LocalProvider
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import model_validator
+
+import logging
+from parsl.addresses import address_by_interface
+# Silence noisy Parsl scaling and strategy logs
+logging.getLogger('parsl.jobs.strategy').setLevel(logging.WARNING)
+logging.getLogger('parsl.executors.high_throughput.zmq_pipes').setLevel(logging.WARNING)
+logging.getLogger('parsl.executors.high_throughput.interchange').setLevel(logging.WARNING)
 
 
 class BaseComputeConfig(BaseModel, ABC):
@@ -234,7 +241,7 @@ class VistaConfig(BaseComputeConfig):
     name: Literal['vista'] = 'vista'  # type: ignore[assignment]
 
     num_nodes: int = Field(
-        ge=3,
+        ge=2,
         description='Number of nodes to use (must use at least 3 nodes).',
     )
 
@@ -246,19 +253,29 @@ class VistaConfig(BaseComputeConfig):
         'strategy could shut down unused blocks. Default is 10 minutes.',
     )
 
+
     def _get_htex(self, label: str, num_nodes: int) -> HighThroughputExecutor:
+        # If num_nodes > 0, we use srun to grab remote nodes in our allocation.
+        # If num_nodes is 0, we use SimpleLauncher to run on the CURRENT node.
+        if num_nodes > 0:
+            launcher = WrappedLauncher(
+                prepend=f'srun -l --ntasks-per-node=1 --nodes={num_nodes}',
+                debug=True
+            )
+        else:
+            launcher = SimpleLauncher()
+
         return HighThroughputExecutor(
             label=label,
-            available_accelerators=1,  # 1 GH per node
+            worker_debug=False, #enable detailed worker logging
+            available_accelerators=1,
             cores_per_worker=72,
             cpu_affinity='alternating',
             prefetch_capacity=0,
             provider=LocalProvider(
-                launcher=WrappedLauncher(
-                    prepend=f'srun -l --ntasks-per-node=1 --nodes={num_nodes}',
-                ),
+                launcher=launcher,
                 cmd_timeout=120,
-                nodes_per_block=num_nodes,
+                nodes_per_block=max(1, num_nodes), # LocalProvider needs at least 1 'block'
                 init_blocks=1,
                 max_blocks=1,
             ),
@@ -268,13 +285,13 @@ class VistaConfig(BaseComputeConfig):
         """Generate a Parsl configuration."""
         return Config(
             run_dir=str(run_dir),
+            # FORCE BINDING TO bond0
+            address=address_by_interface('bond0'),
             max_idletime=self.max_idletime,
             executors=[
-                # Assign 1 node each for training and inference
-                self._get_htex('train_htex', 1),
-                self._get_htex('inference_htex', 1),
-                # Assign the remaining nodes to the simulation
-                self._get_htex('simulation_htex', self.num_nodes - 2),
+                self._get_htex('train_htex', 0),
+                self._get_htex('inference_htex', 0),
+                self._get_htex('simulation_htex', self.num_nodes - 1),
             ],
         )
 

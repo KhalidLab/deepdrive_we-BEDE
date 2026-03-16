@@ -1,0 +1,11 @@
+Starting Environment Check on gh003.bede.dur.ac.uk at Wed Mar 11 05:41:18 PM GMT 2026
+=== Bede Grace Hopper Environment Check ===
+Python Version: 3.12.13 | packaged by conda-forge | (main, Mar  5 2026, 16:39:32) [GCC 14.3.0]
+PyTorch Version: 2.5.1
+Processor Architecture: aarch64 (Correct)
+CUDA Available: True
+GPU Device Count: 1
+Active GPU: NVIDIA GH200 480GB
+CUDA Tensor Operation: Success
+Unified Memory check: cuda:0
+Check Completed at Wed Mar 11 05:41:23 PM GMT 2026

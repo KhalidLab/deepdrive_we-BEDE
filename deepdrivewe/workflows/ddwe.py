@@ -104,7 +104,7 @@ class DDWEThinker(BaseThinker):
 
     @result_processor(topic='simulation')
     def process_simulation_result(self, result: Result) -> None:
-        """Process a simulation result."""
+        """Process a simulation result but also ensure data persists for training."""
         # Log simulation job results
         self.result_logger.log(result, topic='simulation')
 
@@ -127,7 +127,7 @@ class DDWEThinker(BaseThinker):
         # extract the proxied objects. The non-streaming case will
         # need to extract and re-proxy the objects twice (once for
         # the train task and once for the inference task).
-        output = result.value if self.streaming else extract(result.value)
+        output = result.value if self.streaming else extract(result.value, evict=False)
         self.sim_output.append(output)
 
         # If we have all the simulation results, submit a train task
@@ -156,9 +156,15 @@ class DDWEThinker(BaseThinker):
 
         # Check if the task failed
         if not result.success:
-            self.logger.warning('Training failed, quitting workflow.')
+            self.logger.error("!!! TRAINING TASK FAILED !!!")
+            if result.failure_info:
+                # model_dump() exports all data (type, traceback, message) as a dict
+                self.logger.error(f"Failure Details: {result.failure_info.model_dump()}")
+            else:
+                self.logger.error("No failure info available (Task likely killed by Slurm).")
             self.done.set()
             return
+
 
         # Store the training output
         self.train_output = result.value
@@ -178,9 +184,15 @@ class DDWEThinker(BaseThinker):
 
         # Check if the task failed
         if not result.success:
-            self.logger.warning('Inference failed, quitting workflow.')
+            self.logger.error("!!! INFERENCE TASK FAILED !!!")
+            if result.failure_info:
+                # model_dump() exports all data (type, traceback, message) as a dict
+                self.logger.error(f"Failure Details: {result.failure_info.model_dump()}")
+            else:
+                self.logger.error("No failure info available (Task likely killed by Slurm).")
             self.done.set()
             return
+
 
         # Unpack the output
         cur_sims, next_sims, metadata = result.value
