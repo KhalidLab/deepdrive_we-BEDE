@@ -38,10 +38,16 @@ def run_train(
     output_dir: Path,
 ) -> TrainResult:
     """Train the model on the simulation output."""
+
+    print("DEBUG: Training task started", flush=True)
+
     # Make the output directory
     itetation = sim_output[0].metadata.iteration_id
     output_dir = output_dir / f'{itetation:06d}'
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Check if data is accessible
+    print(f"DEBUG: Processing {len(sim_output)} simulation results", flush=True)
 
     # Load the model configuration
     model_config = ConvolutionalVAEConfig.from_yaml(config.config_path)

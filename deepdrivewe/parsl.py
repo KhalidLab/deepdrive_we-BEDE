@@ -24,6 +24,13 @@ from pydantic import BaseModel
 from pydantic import Field
 from pydantic import model_validator
 
+import logging
+from parsl.addresses import address_by_interface
+# Silence noisy Parsl scaling and strategy logs
+logging.getLogger('parsl.jobs.strategy').setLevel(logging.WARNING)
+logging.getLogger('parsl.executors.high_throughput.zmq_pipes').setLevel(logging.WARNING)
+logging.getLogger('parsl.executors.high_throughput.interchange').setLevel(logging.WARNING)
+
 
 class BaseComputeConfig(BaseModel, ABC):
     """Compute config (HPC platform, number of GPUs, etc)."""
@@ -260,7 +267,7 @@ class VistaConfig(BaseComputeConfig):
 
         return HighThroughputExecutor(
             label=label,
-            worker_debug=True, #enable detailed worker logging
+            worker_debug=False, #enable detailed worker logging
             available_accelerators=1,
             cores_per_worker=72,
             cpu_affinity='alternating',
@@ -278,12 +285,12 @@ class VistaConfig(BaseComputeConfig):
         """Generate a Parsl configuration."""
         return Config(
             run_dir=str(run_dir),
+            # FORCE BINDING TO bond0
+            address=address_by_interface('bond0'),
             max_idletime=self.max_idletime,
             executors=[
-                # Assign 1 node each for training and inference
                 self._get_htex('train_htex', 0),
                 self._get_htex('inference_htex', 0),
-                # Assign the remaining nodes to the simulation
                 self._get_htex('simulation_htex', self.num_nodes - 1),
             ],
         )
