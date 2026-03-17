@@ -127,7 +127,7 @@ class DDWEThinker(BaseThinker):
         # extract the proxied objects. The non-streaming case will
         # need to extract and re-proxy the objects twice (once for
         # the train task and once for the inference task).
-        output = result.value if self.streaming else extract(result.value, evict=False)
+        output = result.value if self.streaming else extract(result.value) #change: evict argument throwing error
         self.sim_output.append(output)
 
         # If we have all the simulation results, submit a train task
