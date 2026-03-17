@@ -12,6 +12,7 @@ from deepdrivewe import SimResult
 from deepdrivewe import TrainResult
 from deepdrivewe.ai import ConvolutionalVAE
 from deepdrivewe.ai import ConvolutionalVAEConfig
+import time
 
 
 class TrainConfig(BaseModel):
@@ -39,6 +40,7 @@ def run_train(
 ) -> TrainResult:
     """Train the model on the simulation output."""
 
+    start_task = time.perf_counter()
     print("DEBUG: Training task started", flush=True)
 
     # Make the output directory
@@ -47,6 +49,7 @@ def run_train(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Check if data is accessible
+    start_data = time.perf_counter()
     print(f"DEBUG: Processing {len(sim_output)} simulation results", flush=True)
 
     # Load the model configuration
@@ -65,6 +68,10 @@ def run_train(
     pcoords = np.concatenate([sim.data['pcoords'] for sim in sim_output])
     pcoords = pcoords.flatten()
 
+    # 4. Training Loop Timing
+    print(f"DEBUG: Starting CVAE fit on {contact_maps.shape[0]} frames...", flush=True)
+    start_fit = time.perf_counter()
+
     # Fit the model
     checkpoint_path = model.fit(
         x=contact_maps,
@@ -72,10 +79,17 @@ def run_train(
         scalars={'pcoord': pcoords},
     )
 
+    fit_duration = time.perf_counter() - start_fit
+    print(f"DEBUG: CVAE training (fit) took {fit_duration:.2f} seconds", flush=True)
+
+
     # Return the train result
     result = TrainResult(
         config_path=config.config_path,
         checkpoint_path=checkpoint_path,
     )
+
+    total_duration = time.perf_counter() - start_task
+    print(f"DEBUG: Total training task time: {total_duration:.2f} seconds", flush=True)
 
     return result
