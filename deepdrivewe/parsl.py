@@ -267,7 +267,7 @@ class VistaConfig(BaseComputeConfig):
 
         return HighThroughputExecutor(
             label=label,
-            address='localhost', #attempt to  set address to fix parsl error
+            address='127.0.0.1', #Addressing: ValueError: 'localhost' does not appear to be an IPv4 or IPv6 address
             worker_debug=False, #enable detailed worker logging
             available_accelerators=1,
             cores_per_worker=72,
