@@ -267,6 +267,7 @@ class VistaConfig(BaseComputeConfig):
 
         return HighThroughputExecutor(
             label=label,
+            address='localhost', #attempt to  set address to fix parsl error
             worker_debug=False, #enable detailed worker logging
             available_accelerators=1,
             cores_per_worker=72,
@@ -285,8 +286,6 @@ class VistaConfig(BaseComputeConfig):
         """Generate a Parsl configuration."""
         return Config(
             run_dir=str(run_dir),
-            # FORCE BINDING TO bond0
-            address=address_by_interface('bond0'),
             max_idletime=self.max_idletime,
             executors=[
                 self._get_htex('train_htex', 0),
