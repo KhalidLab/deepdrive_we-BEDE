@@ -127,7 +127,10 @@ class DDWEThinker(BaseThinker):
         # extract the proxied objects. The non-streaming case will
         # need to extract and re-proxy the objects twice (once for
         # the train task and once for the inference task).
-        output = result.value if self.streaming else extract(result.value) #change: evict argument throwing error
+
+
+        #output = result.value if self.streaming else extract(result.value) #change: evict argument throwing error
+        output = result.value
         self.sim_output.append(output)
 
         # If we have all the simulation results, submit a train task
@@ -137,7 +140,7 @@ class DDWEThinker(BaseThinker):
             # So, we don't need to submit an extra training task.
             if not self.streaming:
                 self.submit_task('train', self.sim_output)
-                self.logger.info('Submitting training task')
+                self.logger.info('Submitting training task with persistent proxies')
 
             # If it's okay to use the stale model, submit the inference task
             # using the previous iteration's model

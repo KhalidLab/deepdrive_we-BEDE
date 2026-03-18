@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -J idev6
-#SBATCH -o idev6.o%j
+#SBATCH -J idev15
+#SBATCH -o idev15.o%j
 #SBATCH -N 2
 #SBATCH --ntasks-per-node=1
 #SBATCH -p ghtest
