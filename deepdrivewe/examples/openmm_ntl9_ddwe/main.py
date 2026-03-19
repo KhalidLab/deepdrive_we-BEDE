@@ -141,9 +141,12 @@ if __name__ == '__main__':
     )
 
     # Make the store
+    # Setting evict_inplace=False to ensure that simulation data remains
+    # available for both training and inference tasks. Manual cleanup to ADD
     store = Store(
         name='file-store',
         register=True,
+        evict_inplace=False,
         connector=FileConnector(store_dir=str(cfg.output_dir / 'proxy-store')),
     )
 
