@@ -130,17 +130,24 @@ class DDWEThinker(BaseThinker):
 
 
         #output = result.value if self.streaming else extract(result.value) #change: evict argument throwing error
-        output = result.value
-        self.sim_output.append(output)
+        #output = result.value
+
+        from proxystore.store import get_store
+        from proxystore.proxy import extract
+        store = get_store('file-store')
+        raw_data = extract(result.value)
+
+
+        # We extract the value and immediately put it back into the store
+        # but this time we create a proxy that we KNOW won't evict.
+        key = store.put(raw_data)
+
+        self.sim_output.append(key)
 
         # If we have all the simulation results, submit a train task
         if len(self.sim_output) == len(self.ensemble.next_sims):
-            # If we are streaming, then the simulation results are
-            # directly routed to the training task via ProxyStream.
-            # So, we don't need to submit an extra training task.
-            if not self.streaming:
-                self.submit_task('train', self.sim_output)
-                self.logger.info('Submitting training task with persistent proxies')
+            self.submit_task('train', self.sim_output)
+            self.logger.info('Submitting training task with manual keys')
 
             # If it's okay to use the stale model, submit the inference task
             # using the previous iteration's model
@@ -170,11 +177,12 @@ class DDWEThinker(BaseThinker):
 
 
         # Store the training output
-        self.train_output = result.value
+        from proxystore.store import get_store
+        from proxystore.proxy import extract
+        store = get_store('file-store')
+        raw_train_data = extract(result.value)
+        self.train_output = store.put(raw_train_data)
 
-        # TODO: What should we do in the streaming case?
-        #       Does the process_train_result method even run?
-        # Submit an inference task with the simulation/train task outputs
         if not self.streaming:
             self.submit_task('inference', self.sim_output, self.train_output)
             self.logger.info('submitted inference task')
