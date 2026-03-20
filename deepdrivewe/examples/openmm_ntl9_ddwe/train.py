@@ -91,6 +91,8 @@ def run_train(
         checkpoint_path=config.checkpoint_path,
     )
 
+    print(f"DEBUG: Data check - contact_maps shape: {contact_maps.shape}, pcoords shape: {pcoords.shape}", flush=True)
+
     # Training Loop Timing
     print(f"DEBUG: Starting CVAE fit on {contact_maps.shape[0]} frames...", flush=True)
     start_fit = time.perf_counter()
