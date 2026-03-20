@@ -146,7 +146,6 @@ if __name__ == '__main__':
     store = Store(
         name='file-store',
         register=True,
-        evict_inplace=False,
         connector=FileConnector(store_dir=str(cfg.output_dir / 'proxy-store')),
     )
 
