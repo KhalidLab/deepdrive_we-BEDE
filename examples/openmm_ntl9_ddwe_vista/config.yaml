@@ -28,8 +28,8 @@ basis_state_initializer:
 simulation_config:
   # The OpenMM configuration
   openmm_config:
-    # The number of nanoseconds to run each simulation for (10 ps)
-    simulation_length_ns: 0.01
+    # The number of nanoseconds to run each simulation for (100 ps)
+    simulation_length_ns: 0.1
     # How often to report frames in picoseconds
     report_interval_ps: 2.0
     # The time step to use in picoseconds

@@ -135,8 +135,11 @@ class DDWEThinker(BaseThinker):
         from proxystore.store import get_store
         from proxystore.proxy import extract
         store = get_store('file-store')
-        raw_data = extract(result.value)
 
+        # Check if the result is a proxy before extracting
+        raw_data = result.value
+        if hasattr(raw_data, '__proxy_wrapped__'):
+            raw_data = extract(raw_data)
 
         # We extract the value and immediately put it back into the store
         # but this time we create a proxy that we KNOW won't evict.
@@ -180,7 +183,11 @@ class DDWEThinker(BaseThinker):
         from proxystore.store import get_store
         from proxystore.proxy import extract
         store = get_store('file-store')
-        raw_train_data = extract(result.value)
+        raw_train_data = result.value
+        # SAFE EXTRACTION: Check if it is a proxy
+        if hasattr(raw_train_data, '__proxy_wrapped__'):
+            raw_train_data = extract(raw_train_data)
+        #Storing hard-copy key for inference
         self.train_output = store.put(raw_train_data)
 
         if not self.streaming:
