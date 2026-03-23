@@ -16,19 +16,28 @@ On Bede, it is highly recommended to install the source code in your project's `
 cd /nobackup/projects/<project_code>/<user_name>/
 ```
 
-**Miniforge (ppc64le) installation**\
-Miniforge ppc64le provides compatible Conda packages and is required.
+**Miniforge (aarch64) installation**\
+Miniforge aarch64 provides compatible Conda packages and is required.
 
 ```bash
 # 1. Create architecture-specific directory:
-mkdir -p ppc64le
-cd ppc64le
+mkdir -p aarch64
+cd aarch64
 
-# 2. Download Miniforge (ppc64le build):
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-ppc64le.sh # Required for CUDA, OpenMM, and ML stacks on BEDE
+export CONDADIR=/nobackup/projects/<project>/$USER/aarch64 # Update this with your <project> code.
+mkdir -p $CONDADIR
+pushd $CONDADIR
 
-# 3. Install Miniforge:
-bash Miniforge3-Linux-ppc64le.sh -b -p "$(pwd)/miniconda"
+# Download the latest miniconda installer for aarch64
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
+
+# Validate the file checksum matches are listed on https://docs.conda.io/en/latest/miniconda_hashes.html.
+sha256sum Miniconda3-latest-Linux-aarch64.sh
+
+sh Miniconda3-latest-Linux-aarch64.sh -b -p ./miniconda
+source miniconda/etc/profile.d/conda.sh
+conda update conda -y
+```
 
 # 4. Initialise Conda for this shell:
 source ./miniconda/etc/profile.d/conda.sh
