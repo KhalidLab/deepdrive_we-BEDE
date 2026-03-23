@@ -6,7 +6,7 @@ This documentation details the setup required to run DeepDriveMD on the **Bede S
 
 ---
 
-## 0. Initial Setup & Cloning
+## 0. Initial Setup & Conda Installation
 
 ### 📍 Recommended Installation Path
 On Bede, it is highly recommended to install the source code in your project's `nobackup` directory to avoid storage quotas and ensure fast I/O performance.
@@ -45,67 +45,9 @@ conda update conda -y
 conda --version # Current version at publishing for future debugging: 'conda 26.1.1'. Your version might differ, which is okay.
 ```
 
-## Installation
-Full installation including dependencies:
-```bash
-git clone https://github.com/NikJur/deepdrive_we-BEDE.git
-cd deepdrivewe
-conda create -n deepdrivewe python=3.12 -y
-conda install dacase::ambertools-dac=25 #needs python 3.12#
+### DeepDriveMD Installation
+Run the following commands:
 
-#To enable CUDA support, UCX requires the CUDA Runtime library (libcudart).
-#The library can be installed with the appropriate command below:
-#* For CUDA 12, run:    conda install cuda-cudart cuda-version=12
-#* For CUDA 13, run:    conda install cuda-cudart cuda-version=13
-#If any of the packages you requested use CUDA then CUDA should already
-#have been installed for you.
-#To enable CUDA support, please follow UCX's instruction above.
-#To additionally enable NCCL support, run:    conda install nccl
-#On Linux, Open MPI is built with CUDA awareness but it is disabled by default.
-#To enable it, please set the environment variable
-#OMPI_MCA_opal_cuda_support=true
-#before launching your MPI processes.
-#Equivalently, you can set the MCA parameter in the command line:
-#mpiexec --mca opal_cuda_support 1 ...
-#Note that you might also need to set UCX_MEMTYPE_CACHE=n for CUDA awareness via
-#UCX. Please consult UCX documentation for further details.
-
-#old: conda install conda-forge::openmm==7.7 -y
-conda install conda-forge::openmm -y
-
-pip install -e .
-
-#  Building wheel for h5py (pyproject.toml) ... error
-#  error: subprocess-exited-with-error
-#  × Building wheel for h5py (pyproject.toml) did not run successfully.
-#  │ exit code: 1
-#  ╰─> [305 lines of output]
-#      /tmp/pip-build-env-njmmdowk/overlay/lib/python3.12/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
-```
-#To use deep learning models, install the correct version of [PyTorch](https://pytorch.org/get-started/locally/)
-#for your system and drivers. To use `mdlearn`, you may need an earlier version of PyTorch:
-```bash
-pip install torch==1.12
-```
-
-### Installation on VISTA
-Install conda (adjust this for paths etc still, this is currently default doc. from Bede:
-```bash
-export CONDADIR=/nobackup/projects/<project>/$USER/aarch64 # Update this with your <project> code.
-mkdir -p $CONDADIR
-pushd $CONDADIR
-
-# Download the latest miniconda installer for aarch64
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
-# Validate the file checksum matches is listed on https://docs.conda.io/en/latest/miniconda_hashes.html.
-sha256sum Miniconda3-latest-Linux-aarch64.sh
-
-sh Miniconda3-latest-Linux-aarch64.sh -b -p ./miniconda
-source miniconda/etc/profile.d/conda.sh
-conda update conda -y
-```
-
-To install the package on VISTA, run the following commands:
 ```bash
 module load gcc/14.2
 module load cuda/12.5.1
@@ -135,8 +77,25 @@ conda install conda-forge::pyyaml -y
 pip install colmena proxystore parsl typer mdtraj mdanalysis scikit-learn mdlearn natsort matplotlib pydantic
 ```
 
-To run an example on BECE, update the absolute paths in the submit script
-and the YAML config file, and then run the following command:
+To run an example on the BEDE Grace Hoppers, update the paths in the submit script
+and the YAML config file:
+```bash
+# Define project and user credentials
+PROJECT_CODE="<your_project_code>" #replace "<your_project_code>" in this line.
+USER_NAME="$(whoami)"
+
+# Define files to be updated
+SUBMIT_SCRIPT="examples/openmm_ntl9_ddwe_vista/submit.sh"
+CONFIG_FILE="examples/openmm_ntl9_ddwe_vista/config.yaml"
+
+# Perform global replacement of placeholder paths
+sed -i "s|<project_code>/<user_name>|${PROJECT_CODE}/${USER_NAME}|g" "$SUBMIT_SCRIPT"  # copy-paste as is! Do NOT replace anything in this line.
+sed -i "s|<project_code>/<user_name>|${PROJECT_CODE}/${USER_NAME}|g" "$CONFIG_FILE"    # copy-paste as is! Do NOT replace anything in this line.
+
+echo "Paths updated successfully for user ${USER_NAME} in project ${PROJECT_CODE}."
+```
+
+Then run the following command:
 ```bash
 sbatch examples/openmm_ntl9_ddwe_vista/submit.sh
 ```
