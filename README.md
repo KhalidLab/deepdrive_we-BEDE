@@ -133,7 +133,8 @@ To check the number of iterations completed:
 h5ls -d runs/ntl9-v1/west.h5/iterations
 ```
 In our ntl9-v1 example, you should see the following output: \
-'''iter_00000001            Group \
+```bash
+iter_00000001            Group \
 iter_00000002            Group \
 iter_00000003            Group \
 iter_00000004            Group \
@@ -143,6 +144,6 @@ iter_00000007            Group \
 iter_00000008            Group \
 iter_00000009            Group \
 iter_00000010            Group
-'''
+```
 
 Further information on running with SynD and OpenMM is available from https://github.com/ramanathanlab/deepdrivewe.
