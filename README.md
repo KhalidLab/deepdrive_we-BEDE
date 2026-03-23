@@ -42,7 +42,7 @@ source miniconda/etc/profile.d/conda.sh
 conda update conda -y
 
 # Verify installation:
-conda --version # Current version at publishing for future debugging: 'conda 26.1.1'
+conda --version # Current version at publishing for future debugging: 'conda 26.1.1'. Your version might differ, which is okay.
 ```
 
 ## 📂 1. Directory Structure
