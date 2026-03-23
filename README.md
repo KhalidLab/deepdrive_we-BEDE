@@ -167,7 +167,7 @@ iter_00000010            Group
 ghlogin -A <project_code> # replace <project_code> with you project billing code
 ```
 
-Further information on running DeepDriveMD with SynD and OpenMM is available from https://github.com/ramanathanlab/deepdrivewe.
+Further information on running DeepDriveMD with SynD and OpenMM is available from the [upstream repository](https://github.com/ramanathanlab/deepdrivewe).
 
 ## 🛠 4. Code Patches
 
