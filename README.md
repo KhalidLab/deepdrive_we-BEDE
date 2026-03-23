@@ -128,7 +128,6 @@ conda update conda -y
 
 To install the package on VISTA, run the following commands:
 ```bash
-#old: ml gcc/14.2.0 cuda/12.5 hdf5
 module load gcc/14.2
 module load cuda/12.5.1
 module load hdf5
@@ -138,8 +137,8 @@ conda activate deepdrivewe
 conda install conda-forge::openmm -y
 pip install torch --index-url https://download.pytorch.org/whl/cu124
 
-git clone git@github.com:braceal/deepdrivewe.git
-cd deepdrivewe
+git clone https://github.com/KhalidLab/deepdrive_we-BEDE.git
+cd deepdrive_we-BEDE
 pip install -U pip setuptools wheel
 
 # Create a new cache directory in your project folder
