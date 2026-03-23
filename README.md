@@ -16,19 +16,6 @@ On Bede, it is highly recommended to install the source code in your project's `
 cd /nobackup/projects/<project_code>/<user_name>/
 ```
 
-**Create a `sources` directory and clone all required repositories into it:**
-```bash
-mkdir -p sources
-cd sources
-
-# 1. DeepDriveMD BEDE fork
-git clone https://github.com/NikJur/DeepDriveMD-BEDE.git
-
-# 2. Required dependencies
-git clone https://github.com/braceal/molecules.git
-git clone https://github.com/braceal/MD-tools.git
-```
-
 **Miniforge (ppc64le) installation**\
 Miniforge ppc64le provides compatible Conda packages and is required.
 
