@@ -1,5 +1,4 @@
 # deepdrivewe
-Implementation of [WESTPA](https://westpa.github.io/westpa/index.html) using [Colmena](https://github.com/exalearn/colmena/tree/master).
 
 ## Installation
 
