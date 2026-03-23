@@ -120,66 +120,28 @@ Your directory should look something like this:
 ghlogin -A <project_code> # replace <project_code> with you project billing code
 ```
 
-To run the example, run the following command:
-```bash
-python -m deepdrivewe.examples.amber_hk.main --config examples/amber_nacl_hk/config.yaml
-```
+The main files you will want to edit for your simulations (other than pdb and toplogy files) are submit.sh, config.yaml, and cvae-config.yaml.
 
-To kill all the workers, run the following command:
+To check if any errors occurred in simulations or inference after you job finishes:
 ```bash
-ps -e | grep -E 'sander|python|process_worker|parsl' | awk '{print $1}' | xargs kill
-```
-
-To check if any errors occurred in simulations or inference:
-```bash
-cat runs/naive_resampler_test_v2/result/inference.json | grep '"success": false'
-cat runs/naive_resampler_test_v2/result/simulation.json | grep '"success": false'
+cat runs/ntl9-v1/result/inference.json | grep '"success": false'
+cat runs/ntl9-v1/result/simulation.json | grep '"success": false'
 ```
 
 To check the number of iterations completed:
 ```bash
-h5ls -d runs/naive_resampler_test_v2/west.h5/iterations
+h5ls -d runs/ntl9-v1/west.h5/iterations
 ```
+In our ntl9-v1 example, you should see the following output:
+iter_00000001            Group
+iter_00000002            Group
+iter_00000003            Group
+iter_00000004            Group
+iter_00000005            Group
+iter_00000006            Group
+iter_00000007            Group
+iter_00000008            Group
+iter_00000009            Group
+iter_00000010            Group
 
-### Running with SynD
-To use the SynD simulation engine, install the following dependencies:
-```bash
-pip install git+https://github.com/jeremyleung521/SynD.git@rng-fix
-```
-
-To generate the basis state .npy files from a .txt file, run the following command:
-```bash
-python -m deepdrivewe.simulation.synd --basis-states examples/synd_ntl9/bstates.txt --output-dir examples/synd_ntl9/bstates
-```
-
-To run the example, run the following command:
-```bash
-nohup python -m deepdrivewe.examples.synd_ntl9.main --config examples/synd_ntl9/config.yaml &> nohup.log &
-```
-
-### Running with OpenMM
-To run the example, run the following command:
-```bash
-OPENMM_CPU_THREADS=1 nohup python -m deepdrivewe.examples.openmm_ntl9_hk.main --config examples/openmm_ntl9_hk/config.yaml &> nohup.log &
-```
-
-Note that we set `OPENMM_CPU_THREADS=1` to restrict each OpenMM simulation to a single thread. This is necessary to prevent
-the simulations from using all available CPU resources. You can also run the simulations on a GPU by adjusting the Parsl configuration.
-
-## Contributing
-
-For development, it is recommended to use a virtual environment. The following
-commands will create a virtual environment, install the package in editable
-mode, and install the pre-commit hooks.
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install -U pip setuptools wheel
-pip install -e '.[dev,docs]'
-pre-commit install
-```
-To test the code, run the following command:
-```bash
-pre-commit run --all-files
-tox -e py310
-```
+Further information on running with SynD and OpenMM is available from https://github.com/ramanathanlab/deepdrivewe.
