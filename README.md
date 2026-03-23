@@ -168,3 +168,33 @@ ghlogin -A <project_code> # replace <project_code> with you project billing code
 ```
 
 Further information on running DeepDriveMD with SynD and OpenMM is available from https://github.com/ramanathanlab/deepdrivewe.
+
+## 🛠 4. Code Patches
+
+The following are some of the modifications that have been applied to this fork to ensure stability and data integrity on the BEDE Grace Hopper nodes:
+
+1. Data Persistence & Type-Safety ('deepdrivewe/workflows/ddwe.py')
+
+Eager Extraction: Implemented a mandatory 'extract()' call within the 'Thinker' agent. This pulls simulation data into memory before re-registering it with the 'ProxyStore' backend, preventing automated cache eviction. Originally, data files were deleted as soon as they had been read; however, they needed to be read multiple times within the pipeline. Hence, temporary hard copies are made now.
+
+Conditional Resolution: Added 'hasattr(data, '__proxy_wrapped__')' checks to both simulation and training result processors. This ensures the workflow can safely handle both proxied and concrete objects without raising 'AttributeError' given we might now  interact with hard copies.
+
+Manual Key Propagation: Refactored the task submission logic to pass raw 'ProxyStore' keys rather than high-level 'Proxy' objects. This decouples data retrieval from the transport layer, ensuring simulation trajectories are always available for the CVAE training phase.
+
+2. Manual Data Resolution ('train.py' & 'inference.py')
+
+Primitive Retrieval: Updated both the training and inference kernels to utilise the 'store.get(key)' interface. This bypasses the "destructive read" behaviour observed in default 'ProxyStore' configurations.
+
+Aggregation Synchronisation: Synchronised the 'np.concatenate' aggregation routines to wait for all needed results to be buffered into memory before merging, ensuring consistent tensor shapes across the Grace Hopper unified memory workspace.
+
+3. CVAE Stability & Batch Management
+
+Batch Size Refinement: Adjusted the 'batch_size' in the example 'cvae-config.yaml' to 4. This prevents 'ZeroDivisionError' during the validation phase when operating on the sparse datasets produced in initial ensemble iterations. In order to run within the 30 min 'ghtest' partition of BEDE, we reduced the number of simulations and therefore needed to reduce the batch size to avoid 'batch size' exceeding the training data set size.
+
+Directory already exists: Added a directory purging sequence in 'run_train' using 'shutil.rmtree()'. This prevents job failures caused by 'FileExistsError' when re-running diagnostic iterations. Now, results folders with the same name will be deleted before a new job of the same name is submitted.
+
+4. Infrastructure Compatibility ('main.py')
+
+ProxyStore Unification: Standardised the initialisation of the 'FileConnector' to use a dedicated directory within the project's 'nobackup' space, so it won't get lost.
+
+Keyword Cleanup: Removed unsupported initialisation parameters (e.g., 'evict_inplace') to maintain compatibility with the specific 'ProxyStore' versions available on the BEDE 'aarch64' software stack.
