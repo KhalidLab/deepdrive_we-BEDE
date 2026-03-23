@@ -45,27 +45,6 @@ conda update conda -y
 conda --version # Current version at publishing for future debugging: 'conda 26.1.1'. Your version might differ, which is okay.
 ```
 
-## 📂 1. Directory Structure
-
-Ensure your source directory is organised as follows before proceeding:
-
-```text
-sources/
-├── DeepDriveMD-BEDE/       # This repository
-│   ├── bede_env_setup/     # Contains the .yml environment files and necessary patches
-│   └── bede_examples/      # Contains example run files
-│       ├── data/
-│       ├── run_stage.sh
-│       ├── deepdrivemd_test.yaml
-│       └── deepdrivemd_test.sh
-├── molecules/              # Required dependency
-├── MD-tools/               # Required dependency
-└── ppc64le/               # Conda installation and later environments
-```
-
-
-
-
 ## Installation
 Full installation including dependencies:
 ```bash
@@ -155,10 +134,25 @@ pip install -e . --no-deps
 conda install conda-forge::pyyaml -y
 pip install colmena proxystore parsl typer mdtraj mdanalysis scikit-learn mdlearn natsort matplotlib pydantic
 ```
-To run an example on VISTA, update the absolute paths in the submit script
+
+To run an example on BECE, update the absolute paths in the submit script
 and the YAML config file, and then run the following command:
 ```bash
 sbatch examples/openmm_ntl9_ddwe_vista/submit.sh
+```
+
+## 📂 X. Directory Structure
+
+Your directory should look something like this:
+
+```text
+/nobackup/projects/<project_code>/<user_name>/aarch64/
+├── deepDrivewe-BEDE/       # This repository
+│   └── examples/      # Contains example run files
+│       └── openmm_ntl9_ddwe_vista/
+│          ├── config.yaml
+│          └── submit.sh
+└── miniconda/               # Conda installation and later environments
 ```
 
 ## Usage
