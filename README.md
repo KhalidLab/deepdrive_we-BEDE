@@ -118,13 +118,20 @@ A successful installation will result in the following layout:
 
 ```text
 /nobackup/projects/<project_code>/<user_name>/aarch64/
-├── deepDrivewe-BEDE/            # DDMD repository
-│   └── examples/                # Contains example run files
-│       └── openmm_ntl9_ddwe_vista/
-│           ├── config.yaml      # MD simulation workflow config
-│           ├── cvae-config.yaml # ML model hyper-parameters
-│           └── submit.sh        # Slurm submission script
-└── miniconda/                   # Conda installation and environments
+├── deepdrive_we-BEDE/            # Root of the cloned repository
+│   ├── deepdrivewe/              # Source code package
+│   ├── examples/                 # All workflow examples
+│   │   └── openmm_ntl9_ddwe_vista/ # Examples we care about for BEDE
+│   │       ├── config.yaml       # MD simulation workflow config
+│   │       ├── cvae-config.yaml  # ML model hyper-parameters
+│   │       ├── submit.sh         # Slurm submission script
+│   │       ├── common_files/     # contains reference pdb
+│   │       └── inputs/           # contains input pdb of ntl9
+│   └── README.md
+├── miniconda/                    # Conda installation directory
+│   ├── bin/                      # Conda executables
+│   └── envs/                     # Environment folder (includes 'deepdrivewe')
+└── Miniconda3-latest-Linux-aarch64.sh
 ```
 
 ## 3. Usage
