@@ -1,21 +1,11 @@
 # deepdrivewe
 
 ## Installation
-
-To install the package, run the following command:
-```bash
-git clone https://github.com/NikJur/deepdrive_we-BEDE.git
-cd deepdrivewe
-pip install -e .
-```
-
 Full installation including dependencies:
 ```bash
 git clone https://github.com/NikJur/deepdrive_we-BEDE.git
 cd deepdrivewe
-#old: conda create -n deepdrivewe python=3.10 -y
 conda create -n deepdrivewe python=3.12 -y
-#old: conda install omnia::ambertools -y#
 conda install dacase::ambertools-dac=25 #needs python 3.12#
 
 #To enable CUDA support, UCX requires the CUDA Runtime library (libcudart).
