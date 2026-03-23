@@ -7,14 +7,18 @@ For installation on Bede NVIDIA Tesla V100/IBM POWER9 architecture, see [DeepDri
 ---
 
 ## 0. Initial Setup & Conda Installation
+First, define your project billing code. Run this command first, and all subsequent steps will use it automatically:
+```bash
+# REPLACE '<your_project_code>' with your actual billing code (e.g., bnnur67)
+export PROJECT="<your_project_code>"
+```
 
 ### 📍 Recommended Installation Path
 On Bede, it is highly recommended to install the source code in your project's `nobackup` directory to avoid storage quotas and ensure fast I/O performance.
 
 **Navigate to your project directory (create your user folder if needed):**
 ```bash
-# Replace <project_code> with your project code
-cd /nobackup/projects/<project_code>/$(whoami)/
+cd /nobackup/projects/$PROJECT/$(whoami)/
 
 mkdir -p aarch64
 cd aarch64
@@ -24,7 +28,7 @@ cd aarch64
 Miniforge aarch64 provides compatible Conda packages and is required.
 
 ```bash
-export CONDADIR=/nobackup/projects/<project_code>/$(whoami)/aarch64 # Update this with your <project_code>.
+export CONDADIR=/nobackup/projects/$PROJECT/$(whoami)/aarch64
 mkdir -p $CONDADIR
 pushd $CONDADIR
 
@@ -35,7 +39,7 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
 sha256sum Miniconda3-latest-Linux-aarch64.sh
 
 # Log in to the Grace Hopper landing node to perform the installation
-ghlogin -A <project_code> # replace <project_code> with your project billing code
+ghlogin -A $PROJECT
 
 # Install Miniconda to the current directory and update conda
 sh Miniconda3-latest-Linux-aarch64.sh -b -p ./miniconda
@@ -70,11 +74,11 @@ cd deepdrive_we-BEDE
 pip install -U pip setuptools wheel
 
 # Create a new cache directory in your project folder
-mkdir -p /nobackup/projects/<project_code>/$(whoami)/aarch64/.pip_cache
+mkdir -p /nobackup/projects/$PROJECT/$(whoami)/aarch64/.pip_cache
 
 # Configure persistent cache to stay within nobackup
-export PIP_CACHE_DIR="/nobackup/projects/<project_code>/$(whoami)/aarch64/.pip_cache"
-export TMPDIR="/nobackup/projects/<project_code>/$(whoami)/aarch64/.pip_cache"
+export PIP_CACHE_DIR="/nobackup/projects/$PROJECT/$(whoami)/aarch64/.pip_cache"
+export TMPDIR="/nobackup/projects/$PROJECT/$(whoami)/aarch64/.pip_cache"
 
 # Install more dependencies and DeepDriveMD itself (follow the order given)
 conda install conda-forge::h5py -y
@@ -88,7 +92,7 @@ To run an example on the BEDE Grace Hoppers, use the following automation block 
 
 ```bash
 # Define project and user credentials
-PROJECT_CODE="<your_project_code>" #replace "<your_project_code>" in this line.
+PROJECT_CODE="$PROJECT
 USER_NAME="$(whoami)"
 
 # Define files to be updated
@@ -126,7 +130,7 @@ A successful installation will result in the following layout:
 ## 3. Usage
 The primary files for configuration (other than pdb and topology files) are 'submit.sh', 'config.yaml', and 'cvae-config.yaml'. I suggest you start by looking at those to get started on your first production run, post example run.
 
-To check if any errors occurred in simulations or inference after your job completed:
+To check if any errors occurred in simulations or inference after your job has completed:
 ```bash
 cat runs/ntl9-v1/result/inference.json | grep '"success": false'
 cat runs/ntl9-v1/result/simulation.json | grep '"success": false'
