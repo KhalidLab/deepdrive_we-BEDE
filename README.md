@@ -142,18 +142,17 @@ cd deepdrive_we-BEDE
 pip install -U pip setuptools wheel
 
 # Create a new cache directory in your project folder
-mkdir -p /nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache
+mkdir -p /nobackup/projects/<project_code>/<user_name>/aarch64/.pip_cache
 
 # Set environment variables to point there
-export PIP_CACHE_DIR="/nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache"
-export TMPDIR="/nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache"
+export PIP_CACHE_DIR="/nobackup/projects/<project_code>/<user_name>/aarch64/.pip_cache"
+export TMPDIR="/nobackup/projects/<project_code>/<user_name>/aarch64/.pip_cache"
 
-#if error "Failed building wheel for h5py":
 conda install conda-forge::h5py -y
 
 pip install -e . --no-deps
 
-#obsulete? conda install conda-forge::pyyaml -y
+conda install conda-forge::pyyaml -y
 pip install colmena proxystore parsl typer mdtraj mdanalysis scikit-learn mdlearn natsort matplotlib pydantic
 ```
 To run an example on VISTA, update the absolute paths in the submit script
