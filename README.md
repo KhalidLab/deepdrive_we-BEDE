@@ -40,12 +40,8 @@ ghlogin -A <project_code> # replace <project_code> with you project billing code
 sh Miniconda3-latest-Linux-aarch64.sh -b -p ./miniconda
 source miniconda/etc/profile.d/conda.sh
 conda update conda -y
-```
 
-# 4. Initialise Conda for this shell:
-source ./miniconda/etc/profile.d/conda.sh
-
-# 5. Verify installation:
+# Verify installation:
 conda --version
 ```
 
