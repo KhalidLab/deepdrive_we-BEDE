@@ -34,6 +34,9 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
 # Validate the file checksum matches are listed on https://docs.conda.io/en/latest/miniconda_hashes.html.
 sha256sum Miniconda3-latest-Linux-aarch64.sh
 
+# We need to log on to the Grace Hopper login landing node to install Miniconda.
+ghlogin -A <project_code> # replace <project_code> with you project billing code
+
 sh Miniconda3-latest-Linux-aarch64.sh -b -p ./miniconda
 source miniconda/etc/profile.d/conda.sh
 conda update conda -y
