@@ -156,6 +156,11 @@ Your directory should look something like this:
 ```
 
 ## Usage
+```bash
+# We need to log on to the Grace Hopper login landing node to submit a job to the GH nodes.
+ghlogin -A <project_code> # replace <project_code> with you project billing code
+```
+
 To run the example, run the following command:
 ```bash
 python -m deepdrivewe.examples.amber_hk.main --config examples/amber_nacl_hk/config.yaml
