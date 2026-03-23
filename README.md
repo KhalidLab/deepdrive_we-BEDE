@@ -2,7 +2,7 @@
 
 This documentation details the setup required to run DeepDriveMD-WE on the Bede Supercomputer using the NVIDIA GH200 Grace Hopper nodes ('aarch64' architecture).
 
-For installation on Bede NVIDIA Tesla V100/IBM POWER9 architecture, see https://github.com/NikJur/DeepDriveMD-BEDE.
+For installation on Bede NVIDIA Tesla V100/IBM POWER9 architecture, see [DeepDriveMD-BEDE](https://github.com/NikJur/DeepDriveMD-BEDE).
 
 ---
 
