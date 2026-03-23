@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH -p ghtest
 #SBATCH -t 00:30:00
-#SBATCH -A <project_code>
+#SBATCH -A <project_billing_code>
 
 #------------------------------------------------------
 # Source conda
