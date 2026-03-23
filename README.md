@@ -90,6 +90,7 @@ CONFIG_FILE="examples/openmm_ntl9_ddwe_vista/config.yaml"
 
 # Perform global replacement of placeholder paths
 sed -i "s|<project_code>/<user_name>|${PROJECT_CODE}/${USER_NAME}|g" "$SUBMIT_SCRIPT"  # copy-paste as is! Do NOT replace anything in this line.
+sed -i "s|<project_billing_code>|${PROJECT_CODE}|g" "$SUBMIT_SCRIPT"  # copy-paste as is! Do NOT replace anything in this line.
 sed -i "s|<project_code>/<user_name>|${PROJECT_CODE}/${USER_NAME}|g" "$CONFIG_FILE"    # copy-paste as is! Do NOT replace anything in this line.
 
 echo "Paths updated successfully for user ${USER_NAME} in project ${PROJECT_CODE}."
