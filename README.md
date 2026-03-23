@@ -132,17 +132,17 @@ To check the number of iterations completed:
 ```bash
 h5ls -d runs/ntl9-v1/west.h5/iterations
 ```
-In our ntl9-v1 example, you should see the following output: \
+In our ntl9-v1 example, you should see the following output:
 ```bash
-iter_00000001            Group \
-iter_00000002            Group \
-iter_00000003            Group \
-iter_00000004            Group \
-iter_00000005            Group \
-iter_00000006            Group \
-iter_00000007            Group \
-iter_00000008            Group \
-iter_00000009            Group \
+iter_00000001            Group
+iter_00000002            Group
+iter_00000003            Group
+iter_00000004            Group
+iter_00000005            Group
+iter_00000006            Group
+iter_00000007            Group
+iter_00000008            Group
+iter_00000009            Group
 iter_00000010            Group
 ```
 
