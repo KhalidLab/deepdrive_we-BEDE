@@ -20,7 +20,7 @@ mkdir -p aarch64
 cd aarch64
 ```
 
-**Miniforge (aarch64) installation**\
+### Miniforge (aarch64) installation
 Miniforge aarch64 provides compatible Conda packages and is required.
 
 ```bash
@@ -46,7 +46,7 @@ conda update conda -y
 conda --version # Current version at publishing for future debugging: 'conda 26.1.1'. Your version might differ, which is okay.
 ```
 
-### 1. DeepDriveMD-WE Installation
+## 1. DeepDriveMD-WE Installation
 Configure the environment and install dependencies for the H200 accelerators and NVLink-C2C interconnect.
 Run the following commands:
 
@@ -83,7 +83,7 @@ conda install conda-forge::pyyaml -y
 pip install colmena proxystore parsl typer mdtraj mdanalysis scikit-learn mdlearn natsort matplotlib pydantic
 ```
 
-### 2. Running the NTL9 Example
+## 2. Running the NTL9 Example
 To run an example on the BEDE Grace Hoppers, use the following automation block to synchronise paths in your submission script and YAML configuration:
 
 ```bash
@@ -123,7 +123,7 @@ A successful installation will result in the following layout:
 └── miniconda/                   # Conda installation and environments
 ```
 
-## Usage
+## 3. Usage
 The primary files for configuration (other than pdb and topology files) are 'submit.sh', 'config.yaml', and 'cvae-config.yaml'. I suggest you start by looking at those to get started on your first production run, post example run.
 
 To check if any errors occurred in simulations or inference after your job completed:
