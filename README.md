@@ -1,5 +1,7 @@
 # DeepDriveMD on Bede (NVIDIA GH200 Grace Hopper Superchips with NVIDIA NVLink-C2C | aarch64)
 
+See https://github.com/NikJur/DeepDriveMD-BEDE to install DDMD on Bede NVIDIA Tesla V100/IBM POWER9 architecture.
+
 This documentation details the setup required to run DeepDriveMD on the **Bede Supercomputer** (IBM PowerAC922, NVIDIA V100, PowerPC `ppc64le`).
 
 We solve the PowerPC dependency conflicts (TensorFlow vs PyTorch) using a **Hybrid Runtime** strategy with two separate compute environments hot-swapped at runtime.
