@@ -170,7 +170,18 @@ ghlogin -A <project_code> # replace <project_code> with you project billing code
 
 Further information on running DeepDriveMD with SynD and OpenMM is available from the [upstream repository](https://github.com/ramanathanlab/deepdrivewe).
 
-## 🛠 4. Code Patches
+## 4. Environment Troubleshooting
+
+To assist with troubleshooting and ensure technical reproducibility, a working_versions.txt file is provided in the deepdrive_we-BEDE root directory. This file contains a snapshot of the specific package versions (CUDA, OpenMM, Parsl, etc.) used during a successful production run on the Grace Hopper nodes.
+
+Verification: If a new user encounters an error, they can simply run the following command to see exactly what changed in their local setup compared to the verified baseline:
+```bash
+diff working_versions.txt <(conda list)
+```
+This file serves as a non-mandatory reference manifest. Rather than fixing the versions in time, this allows packages to update while still saving a point in time that the user knows works.
+
+
+## 🛠 5. Code Patches
 
 The following are some of the modifications that have been applied to this fork to ensure stability and data integrity on the BEDE Grace Hopper nodes:
 
