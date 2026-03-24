@@ -60,9 +60,10 @@ module load gcc/14.2
 module load cuda/12.5.1
 module load hdf5
 
-# Create and activate the deepdrive conda environment
+# Create and activate the deepdrive conda environment and pin the CUDA version
 conda create -n deepdrivewe python=3.12 -y
 conda activate deepdrivewe
+conda install -c conda-forge cuda-version=12.5 -y
 
 # Install core MD and AI libraries
 conda install conda-forge::openmm -y
