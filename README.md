@@ -179,6 +179,7 @@ Verification: If a new user encounters an error, they can simply run the followi
 ```bash
 diff working_versions.txt <(conda list)
 ```
+Although I would suggest opening the file manually (say with nano) and comparing that way.
 This file serves as a non-mandatory reference manifest. Rather than fixing the versions in time, this allows packages to update while still saving a point in time that the user knows works.
 
 
