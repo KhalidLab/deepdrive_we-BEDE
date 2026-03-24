@@ -128,7 +128,8 @@ A successful installation will result in the following layout:
 │   │       ├── submit.sh         # Slurm submission script
 │   │       ├── common_files/     # contains reference pdb
 │   │       └── inputs/           # contains input pdb of ntl9
-│   └── README.md
+│   ├── working_versions.txt      # see "4. Environment Troubleshooting"
+│   └── README.md                 # You are looking at said file
 ├── miniconda/                    # Conda installation directory
 │   ├── bin/                      # Conda executables
 │   └── envs/                     # Environment folder (includes 'deepdrivewe')
