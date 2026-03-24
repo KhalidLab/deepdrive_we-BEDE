@@ -9,8 +9,7 @@ num_iterations: 10
 # The basis states to use for the ensemble
 basis_states:
   # The directory containing the basis states sub directories
-  #basis_state_dir: /scratch/08288/abrace/projects/ddwe/src/deepdrivewe/examples/openmm_ntl9_ddwe_vista/inputs
-  basis_state_dir: /nobackup/projects/bddur53/DDMD_WE_GH_2/TRY_2/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/inputs
+  basis_state_dir: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/inputs
   # The file extension for the basis state files
   basis_state_ext: .pdb
   # The number of basis states to use
@@ -22,8 +21,7 @@ basis_states:
 # Strategy for initializing the basis state progress coordinates
 basis_state_initializer:
   # The path to the reference PDB file
-  #reference_file: /scratch/08288/abrace/projects/ddwe/src/deepdrivewe/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
-  reference_file: /nobackup/projects/bddur53/DDMD_WE_GH_2/TRY_2/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
+  reference_file: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
 # The configuration for the simulation
 simulation_config:
   # The OpenMM configuration
@@ -42,27 +40,22 @@ simulation_config:
     hardware_platform: CUDA
 
   # The path to the reference PDB file
-  #reference_file: /scratch/08288/abrace/projects/ddwe/src/deepdrivewe/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
-  reference_file: /nobackup/projects/bddur53/DDMD_WE_GH_2/TRY_2/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
+  reference_file: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
 
 # The configuration for training
 train_config:
   # The path to the CVAE model configuration file
-  #config_path: /scratch/08288/abrace/projects/ddwe/src/deepdrivewe/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
-  config_path: /nobackup/projects/bddur53/DDMD_WE_GH_2/TRY_2/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
+  config_path: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
   # The path to the CVAE model weights file
-  #checkpoint_path: /scratch/08288/abrace/projects/ddwe/src/deepdrivewe/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
-  checkpoint_path: /nobackup/projects/bddur53/DDMD_WE_GH_2/TRY_2/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
+  checkpoint_path: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
 
 # The configuration for the inference
 inference_config:
   # The path to the CVAE model configuration file
-  #ai_model_config_path: /scratch/08288/abrace/projects/ddwe/src/deepdrivewe/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
-  ai_model_config_path: /nobackup/projects/bddur53/DDMD_WE_GH_2/TRY_2/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
+  ai_model_config_path: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
 
   # The path to the CVAE model weights file
-  #ai_model_checkpoint_path: /scratch/08288/abrace/projects/ddwe/src/deepdrivewe/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
-  ai_model_checkpoint_path: /nobackup/projects/bddur53/DDMD_WE_GH_2/TRY_2/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
+  ai_model_checkpoint_path: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
 
   # The number of neighbors to use for LOF
   lof_n_neighbors: 4
@@ -88,7 +81,5 @@ compute_config:
   # The name of the compute platform to use
   name: vista
 
-  # The number of nodes to use (must use at least 3 nodes)
-  # since we use dedicate node for both the training and inference
-  # the remaining nodes are used for the simulations.
+  # The number of nodes to use (minimum requirement aborted for BEDE - however, we still recommend at least 2 nodes)
   num_nodes: 2
