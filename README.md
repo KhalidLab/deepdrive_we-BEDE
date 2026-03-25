@@ -60,13 +60,22 @@ module load gcc/14.2
 module load cuda/12.5.1
 module load hdf5
 
-# Create and activate the deepdrive conda environment and pin the CUDA version
+# Create and activate the deepdrive conda environment
 conda create -n deepdrivewe python=3.12 -y
 conda activate deepdrivewe
-conda install -c conda-forge cuda-version=12.5 -y
 
-# Install core MD and AI libraries
-conda install conda-forge::openmm -y
+# Install the verified OpenMM and CUDA stack (resolving linkage issues between the OpenMM runtime and the NVIDIA driver stack)
+conda install -c conda-forge \
+    openmm=8.4.0=py312h145d960_2 \
+    cuda-version=13.1 \
+    cuda-nvrtc=13.1.115 \
+    gcc_linux-aarch64 \
+    gxx_linux-aarch64 -y
+
+# Verify the installation (Must show 'CUDA' in the list)
+python -c "import openmm; print([openmm.Platform.getPlatform(i).getName() for i in range(openmm.Platform.getNumPlatforms())])"
+
+# Install Torch
 pip install torch --index-url https://download.pytorch.org/whl/cu124
 
 # Clone the BEDE-specific DeepDriveMD repository
