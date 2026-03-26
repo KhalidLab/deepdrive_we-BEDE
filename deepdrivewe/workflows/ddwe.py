@@ -112,8 +112,8 @@ class DDWEThinker(BaseThinker):
         if not result.success:
             self.logger.error(
                 f'Simulation failed after {result.retries}'
-                f'/{result.max_retries} attempts, quitting workflow.',
-                f' result={result}',
+                f'/{result.max_retries} attempts, quitting workflow.'
+                f' result={result}'
             )
             self.done.set()
             return

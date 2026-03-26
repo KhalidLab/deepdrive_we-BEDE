@@ -33,6 +33,10 @@ CONFIG_FILE=/nobackup/projects/<project_code>/<user_name>/aarch64/deepdrive_we-B
 (while true; do date; nvidia-smi; free -h; sleep 10; done) > resource_usage.log &
 MONITOR_PID=$!
 
+# If CUDA still throwing error with conda version mismatch:
+# export CUDA_HOME=$CUDA_INSTALL_PATH
+# export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
 # Run the example
 python -m deepdrivewe.examples.openmm_ntl9_ddwe.main --config $CONFIG_FILE
 
