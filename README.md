@@ -1,173 +1,225 @@
-# deepdrivewe
+# DeepDriveMD-WE on Bede (NVIDIA GH200 Grace Hopper Superchips | aarch64)
 
-## Installation
+This documentation details the setup required to run DeepDriveMD-WE on the Bede Supercomputer using the NVIDIA GH200 Grace Hopper nodes ('aarch64' architecture).
 
-To install the package, run the following command:
+For installation on Bede NVIDIA Tesla V100/IBM POWER9 architecture, see [DeepDriveMD-BEDE](https://github.com/NikJur/DeepDriveMD-BEDE).
+
+---
+
+## 0. Initial Setup & Conda Installation
+First, define your project billing code. Run this command first, and all subsequent steps will use it automatically:
 ```bash
-git clone https://github.com/NikJur/deepdrive_we-BEDE.git
-cd deepdrivewe
-pip install -e .
+# REPLACE '<your_project_code>' with your actual billing code (e.g., bnnur67)
+export PROJECT="<your_project_code>"
 ```
 
-Full installation including dependencies:
+### 📍 Recommended Installation Path
+On Bede, it is highly recommended to install the source code in your project's `nobackup` directory to avoid storage quotas and ensure fast I/O performance.
+
+**Navigate to your project directory (create your user folder if needed):**
 ```bash
-git clone https://github.com/NikJur/deepdrive_we-BEDE.git
-cd deepdrivewe
-#old: conda create -n deepdrivewe python=3.10 -y
-conda create -n deepdrivewe python=3.12 -y
-#old: conda install omnia::ambertools -y#
-conda install dacase::ambertools-dac=25 #needs python 3.12#
+cd /nobackup/projects/$PROJECT/$(whoami)/
 
-#To enable CUDA support, UCX requires the CUDA Runtime library (libcudart).
-#The library can be installed with the appropriate command below:
-#* For CUDA 12, run:    conda install cuda-cudart cuda-version=12
-#* For CUDA 13, run:    conda install cuda-cudart cuda-version=13
-#If any of the packages you requested use CUDA then CUDA should already
-#have been installed for you.
-#To enable CUDA support, please follow UCX's instruction above.
-#To additionally enable NCCL support, run:    conda install nccl
-#On Linux, Open MPI is built with CUDA awareness but it is disabled by default.
-#To enable it, please set the environment variable
-#OMPI_MCA_opal_cuda_support=true
-#before launching your MPI processes.
-#Equivalently, you can set the MCA parameter in the command line:
-#mpiexec --mca opal_cuda_support 1 ...
-#Note that you might also need to set UCX_MEMTYPE_CACHE=n for CUDA awareness via
-#UCX. Please consult UCX documentation for further details.
-
-#old: conda install conda-forge::openmm==7.7 -y
-conda install conda-forge::openmm -y
-
-pip install -e .
-
-#  Building wheel for h5py (pyproject.toml) ... error
-#  error: subprocess-exited-with-error
-#  × Building wheel for h5py (pyproject.toml) did not run successfully.
-#  │ exit code: 1
-#  ╰─> [305 lines of output]
-#      /tmp/pip-build-env-njmmdowk/overlay/lib/python3.12/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
-```
-#To use deep learning models, install the correct version of [PyTorch](https://pytorch.org/get-started/locally/)
-#for your system and drivers. To use `mdlearn`, you may need an earlier version of PyTorch:
-```bash
-pip install torch==1.12
+mkdir -p aarch64
+cd aarch64
 ```
 
-### Installation on VISTA
-Install conda (adjust this for paths etc still, this is currently default doc. from Bede:
+### Miniforge (aarch64) installation
+Miniforge aarch64 provides compatible Conda packages and is required.
+
 ```bash
-export CONDADIR=/nobackup/projects/<project>/$USER/aarch64 # Update this with your <project> code.
+export CONDADIR=/nobackup/projects/$PROJECT/$(whoami)/aarch64
 mkdir -p $CONDADIR
 pushd $CONDADIR
 
 # Download the latest miniconda installer for aarch64
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
-# Validate the file checksum matches is listed on https://docs.conda.io/en/latest/miniconda_hashes.html.
+
+# Validate the file checksum matches are listed on https://docs.conda.io/en/latest/miniconda_hashes.html.
 sha256sum Miniconda3-latest-Linux-aarch64.sh
 
+# Log in to the Grace Hopper landing node to perform the installation
+ghlogin -A $PROJECT
+
+# Install Miniconda to the current directory and update conda
 sh Miniconda3-latest-Linux-aarch64.sh -b -p ./miniconda
 source miniconda/etc/profile.d/conda.sh
 conda update conda -y
+
+# Verify installation:
+conda --version # Current version at publishing for future debugging: 'conda 26.1.1'. Your version might differ, which is okay.
 ```
 
-To install the package on VISTA, run the following commands:
+## 1. DeepDriveMD-WE Installation
+Configure the environment and install dependencies for the H200 accelerators and NVLink-C2C interconnect.
+Run the following commands:
+
 ```bash
-#old: ml gcc/14.2.0 cuda/12.5 hdf5
+# Load required system modules
 module load gcc/14.2
 module load cuda/12.5.1
 module load hdf5
 
+# Create and activate the deepdrive conda environment
 conda create -n deepdrivewe python=3.12 -y
 conda activate deepdrivewe
-conda install conda-forge::openmm -y
+
+# Install the verified OpenMM and CUDA stack (resolving linkage issues between the OpenMM runtime and the NVIDIA driver stack)
+conda install -c conda-forge \
+    openmm=8.4.0=py312h145d960_2 \
+    cuda-version=13.1 \
+    cuda-nvrtc=13.1.115 \
+    gcc_linux-aarch64 \
+    gxx_linux-aarch64 -y
+
+# Verify the installation (Must show 'CUDA' in the list)
+python -c "import openmm; print([openmm.Platform.getPlatform(i).getName() for i in range(openmm.Platform.getNumPlatforms())])"
+
+# Install Torch
 pip install torch --index-url https://download.pytorch.org/whl/cu124
 
-git clone git@github.com:braceal/deepdrivewe.git
-cd deepdrivewe
+# Clone the BEDE-specific DeepDriveMD repository
+git clone https://github.com/KhalidLab/deepdrive_we-BEDE.git
+cd deepdrive_we-BEDE
 pip install -U pip setuptools wheel
 
 # Create a new cache directory in your project folder
-mkdir -p /nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache
+mkdir -p /nobackup/projects/$PROJECT/$(whoami)/aarch64/.pip_cache
 
-# Set environment variables to point there
-export PIP_CACHE_DIR="/nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache"
-export TMPDIR="/nobackup/projects/bddur53/DDMD_WE_GH_2/.pip_cache"
+# Configure persistent cache to stay within nobackup
+export PIP_CACHE_DIR="/nobackup/projects/$PROJECT/$(whoami)/aarch64/.pip_cache"
+export TMPDIR="/nobackup/projects/$PROJECT/$(whoami)/aarch64/.pip_cache"
 
-#if error "Failed building wheel for h5py":
+# Install more dependencies and DeepDriveMD itself (follow the order given)
 conda install conda-forge::h5py -y
-
 pip install -e . --no-deps
-
-#obsulete? conda install conda-forge::pyyaml -y
+conda install conda-forge::pyyaml -y
 pip install colmena proxystore parsl typer mdtraj mdanalysis scikit-learn mdlearn natsort matplotlib pydantic
+# "ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts."
+# Can be ignored.
 ```
-To run an example on VISTA, update the absolute paths in the submit script
-and the YAML config file, and then run the following command:
+
+## 2. Running the NTL9 Example
+To run an example on the BEDE Grace Hoppers, use the following automation block to synchronise paths in your submission script and YAML configuration:
+
+```bash
+# Define project and user credentials
+PROJECT_CODE="$PROJECT"
+USER_NAME="$(whoami)"
+
+# Define files to be updated
+SUBMIT_SCRIPT="examples/openmm_ntl9_ddwe_vista/submit.sh"
+CONFIG_FILE="examples/openmm_ntl9_ddwe_vista/config.yaml"
+
+# Perform global replacement of placeholder paths
+sed -i "s|<project_code>/<user_name>|${PROJECT_CODE}/${USER_NAME}|g" "$SUBMIT_SCRIPT"  # copy-paste as is! Do NOT replace anything in this line.
+sed -i "s|<project_billing_code>|${PROJECT_CODE}|g" "$SUBMIT_SCRIPT"  # copy-paste as is! Do NOT replace anything in this line.
+sed -i "s|<project_code>/<user_name>|${PROJECT_CODE}/${USER_NAME}|g" "$CONFIG_FILE"    # copy-paste as is! Do NOT replace anything in this line.
+
+echo "Paths updated successfully for user ${USER_NAME} in project ${PROJECT_CODE}."
+```
+
+Then run the following command to submit the job for production on the ghtest partition:
 ```bash
 sbatch examples/openmm_ntl9_ddwe_vista/submit.sh
 ```
 
-## Usage
-To run the example, run the following command:
-```bash
-python -m deepdrivewe.examples.amber_hk.main --config examples/amber_nacl_hk/config.yaml
+## 📂 Directory Structure
+
+A successful installation will result in the following layout:
+
+```text
+/nobackup/projects/<project_code>/<user_name>/aarch64/
+├── deepdrive_we-BEDE/            # Root of the cloned repository
+│   ├── deepdrivewe/              # Source code package
+│   ├── examples/                 # All workflow examples
+│   │   └── openmm_ntl9_ddwe_vista/ # Examples we care about for BEDE
+│   │       ├── config.yaml       # MD simulation workflow config
+│   │       ├── cvae-config.yaml  # ML model hyper-parameters
+│   │       ├── submit.sh         # Slurm submission script
+│   │       ├── common_files/     # contains reference pdb
+│   │       └── inputs/           # contains input pdb of ntl9
+│   ├── working_versions.txt      # see "4. Environment Troubleshooting"
+│   └── README.md                 # You are looking at said file
+├── miniconda/                    # Conda installation directory
+│   ├── bin/                      # Conda executables
+│   └── envs/                     # Environment folder (includes 'deepdrivewe')
+└── Miniconda3-latest-Linux-aarch64.sh
 ```
 
-To kill all the workers, run the following command:
-```bash
-ps -e | grep -E 'sander|python|process_worker|parsl' | awk '{print $1}' | xargs kill
-```
+## 3. Usage
+The primary files for configuration (other than pdb and topology files) are 'submit.sh', 'config.yaml', and 'cvae-config.yaml'. I suggest you start by looking at those to get started on your first production run, post example run.
 
-To check if any errors occurred in simulations or inference:
+To check if any errors occurred in simulations or inference after your job has completed:
 ```bash
-cat runs/naive_resampler_test_v2/result/inference.json | grep '"success": false'
-cat runs/naive_resampler_test_v2/result/simulation.json | grep '"success": false'
+cat runs/ntl9-v1/result/inference.json | grep '"success": false'
+cat runs/ntl9-v1/result/simulation.json | grep '"success": false'
 ```
 
 To check the number of iterations completed:
 ```bash
-h5ls -d runs/naive_resampler_test_v2/west.h5/iterations
+h5ls -d runs/ntl9-v1/west.h5/iterations
 ```
 
-### Running with SynD
-To use the SynD simulation engine, install the following dependencies:
+In our ntl9-v1 example, you should see the following output:
 ```bash
-pip install git+https://github.com/jeremyleung521/SynD.git@rng-fix
+iter_00000001            Group
+iter_00000002            Group
+iter_00000003            Group
+iter_00000004            Group
+iter_00000005            Group
+iter_00000006            Group
+iter_00000007            Group
+iter_00000008            Group
+iter_00000009            Group
+iter_00000010            Group
 ```
 
-To generate the basis state .npy files from a .txt file, run the following command:
 ```bash
-python -m deepdrivewe.simulation.synd --basis-states examples/synd_ntl9/bstates.txt --output-dir examples/synd_ntl9/bstates
+# Every time we want to submit a job to the Grace Hopper nodes, we need to log on to the Grace Hopper login landing node first. This holds true for both the 'ghtest' and 'gh' partition (see submit.sh and BEDE documentation).
+ghlogin -A <project_code> # replace <project_code> with you project billing code
 ```
 
-To run the example, run the following command:
+Further information on running DeepDriveMD with SynD and OpenMM is available from the [upstream repository](https://github.com/ramanathanlab/deepdrivewe).
+
+## 4. Environment Troubleshooting
+
+To assist with troubleshooting and ensure technical reproducibility, a working_versions.txt file is provided in the deepdrive_we-BEDE root directory. This file contains a snapshot of the specific package versions (CUDA, OpenMM, Parsl, etc.) used during a successful production run on the Grace Hopper nodes.
+
+Verification: If a new user encounters an error, they can simply run the following command to see exactly what changed in their local setup compared to the verified baseline:
 ```bash
-nohup python -m deepdrivewe.examples.synd_ntl9.main --config examples/synd_ntl9/config.yaml &> nohup.log &
+diff working_versions.txt <(conda list)
 ```
+Although I would suggest opening the file manually (say with nano) and comparing that way.
+This file serves as a non-mandatory reference manifest. Rather than fixing the versions in time, this allows packages to update while still saving a point in time that the user knows works.
 
-### Running with OpenMM
-To run the example, run the following command:
-```bash
-OPENMM_CPU_THREADS=1 nohup python -m deepdrivewe.examples.openmm_ntl9_hk.main --config examples/openmm_ntl9_hk/config.yaml &> nohup.log &
-```
 
-Note that we set `OPENMM_CPU_THREADS=1` to restrict each OpenMM simulation to a single thread. This is necessary to prevent
-the simulations from using all available CPU resources. You can also run the simulations on a GPU by adjusting the Parsl configuration.
+## 🛠 5. Code Patches
 
-## Contributing
+The following are some of the modifications that have been applied to this fork to ensure stability and data integrity on the BEDE Grace Hopper nodes:
 
-For development, it is recommended to use a virtual environment. The following
-commands will create a virtual environment, install the package in editable
-mode, and install the pre-commit hooks.
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install -U pip setuptools wheel
-pip install -e '.[dev,docs]'
-pre-commit install
-```
-To test the code, run the following command:
-```bash
-pre-commit run --all-files
-tox -e py310
-```
+1. Data Persistence & Type-Safety ('deepdrivewe/workflows/ddwe.py')
+
+Eager Extraction: Implemented a mandatory 'extract()' call within the 'Thinker' agent. This pulls simulation data into memory before re-registering it with the 'ProxyStore' backend, preventing automated cache eviction. Originally, data files were deleted as soon as they had been read; however, they needed to be read multiple times within the pipeline. Hence, temporary hard copies are made now.
+
+Conditional Resolution: Added 'hasattr(data, '__proxy_wrapped__')' checks to both simulation and training result processors. This ensures the workflow can safely handle both proxied and concrete objects without raising 'AttributeError' given we might now  interact with hard copies.
+
+Manual Key Propagation: Refactored the task submission logic to pass raw 'ProxyStore' keys rather than high-level 'Proxy' objects. This decouples data retrieval from the transport layer, ensuring simulation trajectories are always available for the CVAE training phase.
+
+2. Manual Data Resolution ('train.py' & 'inference.py')
+
+Primitive Retrieval: Updated both the training and inference kernels to utilise the 'store.get(key)' interface. This bypasses the "destructive read" behaviour observed in default 'ProxyStore' configurations.
+
+Aggregation Synchronisation: Synchronised the 'np.concatenate' aggregation routines to wait for all needed results to be buffered into memory before merging, ensuring consistent tensor shapes across the Grace Hopper unified memory workspace.
+
+3. CVAE Stability & Batch Management
+
+Batch Size Refinement: Adjusted the 'batch_size' in the example 'cvae-config.yaml' to 4. This prevents 'ZeroDivisionError' during the validation phase when operating on the sparse datasets produced in initial ensemble iterations. In order to run within the 30 min 'ghtest' partition of BEDE, we reduced the number of simulations and therefore needed to reduce the batch size to avoid 'batch size' exceeding the training data set size.
+
+Directory already exists: Added a directory purging sequence in 'run_train' using 'shutil.rmtree()'. This prevents job failures caused by 'FileExistsError' when re-running diagnostic iterations. Now, results folders with the same name will be deleted before a new job of the same name is submitted.
+
+4. Infrastructure Compatibility ('main.py')
+
+ProxyStore Unification: Standardised the initialisation of the 'FileConnector' to use a dedicated directory within the project's 'nobackup' space, so it won't get lost.
+
+Keyword Cleanup: Removed unsupported initialisation parameters (e.g., 'evict_inplace') to maintain compatibility with the specific 'ProxyStore' versions available on the BEDE 'aarch64' software stack.

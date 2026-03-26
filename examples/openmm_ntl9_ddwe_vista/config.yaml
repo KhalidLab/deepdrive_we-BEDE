@@ -8,20 +8,20 @@ num_iterations: 10
 
 # The basis states to use for the ensemble
 basis_states:
-  # The directory containing the basis states sub directories
-  basis_state_dir: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/inputs
+  # The directory containing the basis states subdirectories
+  basis_state_dir: /nobackup/projects/<project_code>/<user_name>/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/inputs
   # The file extension for the basis state files
   basis_state_ext: .pdb
   # The number of basis states to use
   initial_ensemble_members: 12
-  # Whether to randomly initialize the ensemble members if there
+  # Whether to randomly initialise the ensemble members if there
   # are more basis state files than initial ensemble members
   randomly_initialize: true
 
-# Strategy for initializing the basis state progress coordinates
+# Strategy for initialising the basis state progress coordinates
 basis_state_initializer:
   # The path to the reference PDB file
-  reference_file: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
+  reference_file: /nobackup/projects/<project_code>/<user_name>/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
 # The configuration for the simulation
 simulation_config:
   # The OpenMM configuration
@@ -40,24 +40,24 @@ simulation_config:
     hardware_platform: CUDA
 
   # The path to the reference PDB file
-  reference_file: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
+  reference_file: /nobackup/projects/<project_code>/<user_name>/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/common_files/reference.pdb
 
 # The configuration for training
 train_config:
   # The path to the CVAE model configuration file
-  config_path: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
+  config_path: /nobackup/projects/<project_code>/<user_name>/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
   # The path to the CVAE model weights file
-  checkpoint_path: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
+  checkpoint_path: /nobackup/projects/<project_code>/<user_name>/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
 
 # The configuration for the inference
 inference_config:
   # The path to the CVAE model configuration file
-  ai_model_config_path: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
+  ai_model_config_path: /nobackup/projects/<project_code>/<user_name>/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/cvae-config.yaml
 
   # The path to the CVAE model weights file
-  ai_model_checkpoint_path: /nobackup/projects/bddur53/nikjur/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
+  ai_model_checkpoint_path: /nobackup/projects/<project_code>/<user_name>/aarch64/deepdrive_we-BEDE/examples/openmm_ntl9_ddwe_vista/checkpoint-epoch-100.pt
 
-  # The number of neighbors to use for LOF
+  # The number of neighbours to use for LOF
   lof_n_neighbors: 4
   # The distance metric to use for LOF [cosine, minkowski]
   lof_distance_metric: cosine
