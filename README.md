@@ -95,6 +95,8 @@ conda install conda-forge::h5py -y
 pip install -e . --no-deps
 conda install conda-forge::pyyaml -y
 pip install colmena proxystore parsl typer mdtraj mdanalysis scikit-learn mdlearn natsort matplotlib pydantic
+# "ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts."
+# Can be ignored.
 ```
 
 ## 2. Running the NTL9 Example
