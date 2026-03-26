@@ -104,7 +104,7 @@ To run an example on the BEDE Grace Hoppers, use the following automation block 
 
 ```bash
 # Define project and user credentials
-PROJECT_CODE="$PROJECT
+PROJECT_CODE="$PROJECT"
 USER_NAME="$(whoami)"
 
 # Define files to be updated
