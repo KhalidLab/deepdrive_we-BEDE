@@ -25,7 +25,7 @@ from pydantic import Field
 from pydantic import model_validator
 
 import logging
-from parsl.addresses import address_by_interface
+from parsl.addresses import address_by_interface, address_by_hostname()
 # Silence noisy Parsl scaling and strategy logs
 logging.getLogger('parsl.jobs.strategy').setLevel(logging.WARNING)
 logging.getLogger('parsl.executors.high_throughput.zmq_pipes').setLevel(logging.WARNING)
@@ -267,7 +267,7 @@ class VistaConfig(BaseComputeConfig):
 
         return HighThroughputExecutor(
             label=label,
-            address='127.0.0.1', #Addressing: ValueError: 'localhost' does not appear to be an IPv4 or IPv6 address
+            address=address_by_hostname(),                          # If this fails replace by "address='127.0.0.1'," for BEDE [Prev default ValueError: 'localhost' does not appear to be an IPv4 or IPv6 address]
             worker_debug=False, #enable detailed worker logging
             available_accelerators=1,
             cores_per_worker=72,
